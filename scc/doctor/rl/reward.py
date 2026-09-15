@@ -16,6 +16,7 @@ class RewardConfig:
     cost_per_turn: float = 0.02
     bonus_correct: float = 1.0
     kl_missing: float = 0.0        # readout 缺失时 KL 项按 0 处理（只罚格式）
+    loss_scale: float = 0.2        # 终局按损失矩阵扣分：−loss_scale · L(决定, 真值)；与 agent 的目标同一张矩阵
 
 
 def _norm(d: dict | None) -> dict:
@@ -47,10 +48,12 @@ def turn_reward(prev_readout: dict | None, readout: dict | None, oracle_prev: di
     return out
 
 
-def final_reward(readout: dict | None, oracle_z: dict | None, diagnosis_text: str | None, truth: str, cfg: RewardConfig) -> dict:
+def final_reward(readout: dict | None, oracle_z: dict | None, diagnosis_text: str | None, truth: str, cfg: RewardConfig,
+                 loss_of_decision: float | None = None) -> dict:
+    """终局：−KL + 正确奖励 − loss_scale·L(决定, 真值)。loss_of_decision 由环境按损失矩阵算好传入（None = 不用）。"""
     kl = kl_to_oracle(readout, oracle_z)
     r_kl = -kl if kl is not None else -math.log(len(oracle_z)) if oracle_z else 0.0
     correct = bool(diagnosis_text) and (truth.lower() in diagnosis_text.lower() or truth.replace("_", " ").lower() in diagnosis_text.lower())
-    out = {"final_kl": r_kl, "bonus": cfg.bonus_correct if correct else 0.0}
+    out = {"final_kl": r_kl, "bonus": cfg.bonus_correct if correct else 0.0, "loss": -cfg.loss_scale * float(loss_of_decision) if loss_of_decision is not None else 0.0}
     out["total"] = sum(out.values())
     return out

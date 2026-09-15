@@ -12,6 +12,7 @@ from scc.sim.episode import ConsultationEnv
 from scc.doctor.api_doctor import ApiDoctor
 from scc.doctor.base import parse_doctor_text
 from scc.doctor.rl.reward import RewardConfig, turn_reward, final_reward
+from scc.doctor.agent.value import loss_matrix
 
 
 class _NullClient:
@@ -27,6 +28,7 @@ class DoctorRLEnv:
         self.doctor = ApiDoctor(_NullClient(), baseline, lang, told_channel=patient_cfg.name, name="rl")
         self.env = ConsultationEnv(case, patient_cfg, components, cfg, Oracle(case, cfg, Likelihood(cfg)), max_turns, lang, log_path, doctor_name="rl")
         self.truth = case.labels.primary_dx
+        self.Lm = loss_matrix(list(cfg.ddx_set), list(cfg.red_flags), cfg.loss)
         self.prev_readout = None; self.prev_oracle = None; self.ctx = None; self.done = True; self.turn_rewards: list[dict] = []
 
     def reset(self) -> list[dict]:
@@ -51,7 +53,11 @@ class DoctorRLEnv:
         r = turn_reward(self.prev_readout, ro, self.prev_oracle, oracle_now, self.rcfg)
         info = {"turn": log.turn, "action": action.kind.value, "readout_ok": action.readout is not None, "reward_parts": dict(r)}
         if done:
-            fr = final_reward(ro, oracle_now, action.text if action.kind == ActionKind.DIAGNOSE else None, self.truth, self.rcfg)
+            dec = None
+            if action.kind == ActionKind.DIAGNOSE:
+                dec = next((z for z in self.cfg.ddx_set if z.lower() in action.text.lower() or z.replace("_", " ").lower() in action.text.lower()), "handoff")
+            loss = self.Lm[(dec, self.truth)] if dec is not None else self.Lm[("handoff", self.truth)]
+            fr = final_reward(ro, oracle_now, action.text if action.kind == ActionKind.DIAGNOSE else None, self.truth, self.rcfg, loss_of_decision=loss)
             r["total"] += fr["total"]; info["final_parts"] = fr
         self.prev_readout, self.prev_oracle = ro, oracle_now
         self.done = done; self.turn_rewards.append(r)

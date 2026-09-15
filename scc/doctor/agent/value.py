@@ -97,3 +97,57 @@ def channel_discriminability(b: BeliefEngine, c: Candidate) -> float:
             kl = sum(p * math.log(p / max(dists[v].get(r, 1e-12), 1e-12)) for r, p in dists[u].items() if p > 0)
             best = min(best, kl)
     return 0.0 if best == float("inf") else best
+
+
+# ----------------------------------------------------------------------------- 风险加权（RVOI）
+def loss_matrix(zs: list[str], red_flags: list[str], L: dict) -> dict[tuple[str, str], float]:
+    """L[(d, z)]：决定 d（诊断名或 'handoff'）在真值 z 下的损失。"""
+    out: dict[tuple[str, str], float] = {}
+    red = set(red_flags)
+    for d in list(zs) + ["handoff"]:
+        for z in zs:
+            if d == "handoff":
+                out[(d, z)] = float(L.get("handoff", 1.5))
+            elif d == z:
+                out[(d, z)] = 0.0
+            elif z in red and d not in red:
+                out[(d, z)] = float(L.get("miss_red_flag", 10.0))
+            elif d in red and z not in red:
+                out[(d, z)] = float(L.get("false_alarm", 2.0))
+            elif d in red and z in red:
+                out[(d, z)] = float(L.get("wrong_red_red", 1.0))
+            else:
+                out[(d, z)] = float(L.get("wrong_benign", 1.0))
+    return out
+
+
+def bayes_risk(b: BeliefEngine, Lm: dict) -> tuple[float, str]:
+    """当前信念下的最小期望损失及对应决定。"""
+    pz = b.posterior_z(); best, best_d = float("inf"), "handoff"
+    for d in list(b.zs) + ["handoff"]:
+        r = sum(pz[z] * Lm[(d, z)] for z in b.zs)
+        if r < best - 1e-12:
+            best, best_d = r, d
+    return best, best_d
+
+
+def rvoi(b: BeliefEngine, c: Candidate, Lm: dict, n_asked: int = 1) -> float:
+    """风险加权价值：问 c 之后期望损失能降多少（不含问句成本）。"""
+    r0, _ = bayes_risk(b, Lm)
+    outs = outcomes(b, c, n_asked)
+    if not outs:
+        return 0.0
+    return max(0.0, r0 - sum(p * bayes_risk(nb, Lm)[0] for _, p, nb in outs))
+
+
+def lookahead2_rvoi(b: BeliefEngine, c: Candidate, others: list[Candidate], Lm: dict, n_asked: dict | None = None, top: int = 10) -> tuple[float, dict]:
+    """两步前瞻的 RVOI 版：value2 = V1(c) + [E_r max_o V1(o | r,c) − max_o V1(o)]⁺。"""
+    n_asked = n_asked or {}
+    v1 = rvoi(b, c, Lm, n_asked.get((c.slot, c.tag), 0) + 1)
+    pool = [o for o in others if o.key() != c.key()][:top]
+    if not pool:
+        return v1, {"v1": v1, "gain2": 0.0}
+    best_now = max(rvoi(b, o, Lm, n_asked.get((o.slot, o.tag), 0) + 1) for o in pool)
+    exp_best = sum(p * max(rvoi(nb, o, Lm, n_asked.get((o.slot, o.tag), 0) + 1) for o in pool) for _, p, nb in outcomes(b, c, n_asked.get((c.slot, c.tag), 0) + 1))
+    gain2 = max(0.0, exp_best - best_now)
+    return v1 + gain2, {"v1": v1, "gain2": gain2, "best_now": best_now, "exp_best": exp_best}

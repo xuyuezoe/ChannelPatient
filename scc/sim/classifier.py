@@ -34,11 +34,22 @@ class KeywordClassifier:
     def __init__(self, cfg: ClusterConfig):
         self.cfg = cfg
 
+    @staticmethod
+    def last_question(q: str) -> str:
+        """取最后一个问句（医生常先接一句话再问）；没有问号就用整句。"""
+        parts = [p.strip() for p in re.split(r"(?<=[.!?。！？])\s*", q) if p.strip()]
+        qs = [p for p in parts if p.endswith(("?", "？"))]
+        return qs[-1] if qs else q
+
     def _form(self, q: str, lang: str) -> str:
-        ql = q.lower()
-        for form in ("point_to", "recall_test", "scale", "forced_choice", "severity_open", "yes_no"):
+        whole = q.lower(); last = self.last_question(q).lower()
+        for form in ("point_to", "recall_test", "scale"):            # 强线索：整句里出现就算
             for pat in FORM_RULES[lang][form]:
-                if re.search(pat, ql, re.I):
+                if re.search(pat, whole, re.I):
+                    return form
+        for form in ("forced_choice", "severity_open", "yes_no"):    # 弱线索：只看最后一个问句（医生常先接一句话再问）
+            for pat in FORM_RULES[lang][form]:
+                if re.search(pat, last, re.I):
                     return form
         return "open"
 

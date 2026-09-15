@@ -49,7 +49,7 @@ def test_caig_rank_on_stub_runs(tmp_path):
     from scc.doctor.agent.agent_doctor import build_agent_doctor
     from scc.types import PatientConfig
     cfg = load_cluster_config("chest_pain"); case = load_cluster("chest_pain", ["cp_001"])[0]
-    run_episode(case, PatientConfig(name="cooperative"), build_agent_doctor({"components": "stub"}, cfg, "en"), stub_components(cfg), cfg, Oracle(case, cfg, Likelihood(cfg)), 14, "en", tmp_path / "a.jsonl", "cp_001|cooperative|222222B|seed=0|doctor=agent")
+    run_episode(case, PatientConfig(name="cooperative"), build_agent_doctor({"components": "stub", "objective": "caig"}, cfg, "en"), stub_components(cfg), cfg, Oracle(case, cfg, Likelihood(cfg)), 14, "en", tmp_path / "a.jsonl", "cp_001|cooperative|222222B|seed=0|doctor=agent")
     run_episode(case, PatientConfig(name="cooperative"), FixedListDoctor(lang="en"), stub_components(cfg), cfg, Oracle(case, cfg, Likelihood(cfg)), 14, "en", tmp_path / "s.jsonl", "cp_001|cooperative|222222B|seed=0|doctor=scripted_fixed")
     df = caig_rank(tmp_path)
     g = df.groupby(df.episode_id.str.split("|").str[4]).rank_pct.mean()

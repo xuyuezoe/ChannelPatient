@@ -87,6 +87,9 @@ class AgentConfig:
     manner_signals: bool = True
     u_library: str = "default"
     likelihood: str = "table"              # table | llm
+    objective: str = "rvoi"                # rvoi（期望损失下降，默认）| caig（信息增益，供 P1-P3 检验）
+    style: str = "concise"                 # 对话风格旋钮：concise | detailed | warm；只改措辞，不改问什么
+    question_cost: float | None = None     # None = 用簇配置的 loss.question_cost
     epsilon_stop: float = 0.01             # 所有候选价值低于此（nat）视为无信息可得
     tau_stop: float = 0.6                  # 最大后验低于此且无信息可得 -> 不可辨识
     tau_red: float = 0.15                  # 红旗后验高于此不许下诊断

@@ -210,3 +210,60 @@ def test_policy_branches():
     for c in m: c.value = 0.0
     a, info = choose(m, fresh(), cfg, ["stable_angina"], {}); assert a.kind == ActionKind.DIAGNOSE and info["decision"] == "undetermined"
     r = readout(fresh()); assert abs(sum(r.topk.values()) - 1) < 1e-6 and r.confidence == pytest.approx(0.0, abs=1e-6)
+
+
+# ----------------------------------------------------------------------------- RVOI / styler
+def test_rvoi_prefers_red_flag_exclusion_when_ig_is_small():
+    from scc.doctor.agent.value import loss_matrix, bayes_risk, rvoi
+    Lm = loss_matrix(list(CFG.ddx_set), ["stable_angina"], CFG.loss)
+    b = fresh(); m = MenuCandidates(CFG).propose({})
+    # 信念已很偏向 GERD，但红旗还有 8%
+    for (z, u) in b.log_post:
+        b.log_post[(z, u)] = {"GERD": 0.0, "stable_angina": math.log(0.08 / 0.9), "pericarditis": -4, "panic_attack": -4, "costochondritis": -4}[z]
+    risk, d = bayes_risk(b, Lm)
+    assert d == "GERD" or d == "handoff"
+    ex = next(c for c in m if c.slot == "trigger" and c.tag == "exertional")
+    meds = next(c for c in m if c.slot == "medication" and c.form == "forced_choice")
+    assert rvoi(b, ex, Lm) > rvoi(b, meds, Lm)            # 劳力诱发能压红旗，价值高
+    # 同一状态下信息增益几乎不区分它们，或者偏向别的
+    assert rvoi(b, ex, Lm) > 0.05
+
+
+def test_agent_rvoi_asks_red_flag_questions_before_diagnosing_gerd():
+    from scc.doctor.agent.agent_doctor import build_agent_doctor
+    from scc.env.likelihood import Likelihood
+    from scc.env.oracle import Oracle
+    from scc.sim.components import stub_components
+    from scc.sim.episode import run_episode
+    case = load_cluster("chest_pain", ["cp_001"])[0]
+    doc = build_agent_doctor({"components": "stub", "objective": "rvoi"}, CFG, "en")
+    logs = run_episode(case, PatientConfig(name="cooperative"), doc, stub_components(CFG), CFG, Oracle(case, CFG, Likelihood(CFG)), max_turns=14)
+    asked = {(case.atom(a).slot, case.atom(a).tag) for l in logs for a in l.hit_atoms}
+    assert logs[-1].observation.text == "GERD"
+    assert ("trigger", "exertional") in asked or ("associated", "sweating") in asked or ("radiation", None) in asked, asked
+    doc2 = build_agent_doctor({"components": "stub", "objective": "caig"}, CFG, "en")
+    logs2 = run_episode(case, PatientConfig(name="cooperative"), doc2, stub_components(CFG), CFG, Oracle(case, CFG, Likelihood(CFG)), max_turns=14)
+    assert len(logs) >= len(logs2)                                  # 风险加权至少不比信息增益更早停
+
+
+def test_styler_keeps_slot_and_form():
+    from scc.doctor.agent.styler import TemplateStyler, LLMStyler
+    from scc.sim.classifier import KeywordClassifier
+    c = Candidate(ActionKind.ASK, "Does the pain get worse with exertion?", "trigger", "exertional", "yes_no")
+    tr = [("patient", "It's a burning feeling.")]
+    assert TemplateStyler("concise").style(c, tr) == c.text
+    d = TemplateStyler("detailed", 0).style(c, tr); assert c.text in d and len(d) > len(c.text)
+    w = TemplateStyler("warm", 0).style(c, tr); assert c.text in w
+    good = FakeClient(["I see, a burning feeling. Does the pain get worse when you exert yourself?"])
+    s = LLMStyler(CFG, good, KeywordClassifier(CFG), "detailed"); assert "exert" in s.style(c, tr) and s.n_reverted == 0
+    bad = FakeClient(["Tell me about your sleep."])
+    s2 = LLMStyler(CFG, bad, KeywordClassifier(CFG), "detailed"); out = s2.style(c, tr)
+    assert c.text in out and s2.n_reverted == 1
+
+
+def test_reward_final_uses_loss_matrix():
+    from scc.doctor.rl.reward import RewardConfig, final_reward
+    cfg = RewardConfig(loss_scale=0.2)
+    miss = final_reward({"GERD": 0.9, "stable_angina": 0.1}, {"GERD": 0.5, "stable_angina": 0.5}, "GERD", "stable_angina", cfg, loss_of_decision=10.0)
+    ok = final_reward({"GERD": 0.9, "stable_angina": 0.1}, {"GERD": 0.5, "stable_angina": 0.5}, "GERD", "GERD", cfg, loss_of_decision=0.0)
+    assert miss["loss"] == pytest.approx(-2.0) and ok["loss"] == 0.0 and ok["total"] > miss["total"]

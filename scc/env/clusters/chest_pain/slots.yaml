@@ -86,7 +86,7 @@ trigger:
   type: bool
   tag_options: [postprandial, exertional, lying_down, breathing, movement, stress]
   keywords:
-    en: {postprandial: [eating, meal, food, after you eat], exertional: [exercise, exertion, walking, stairs, effort, activity], lying_down: [lying, lie down, bed, bending], breathing: [breathe in, breathing in, inhale, deep breath, breath in], movement: [move, moving, twist, press, touch], stress: [stress, anxious, worried, nervous]}
+    en: {postprandial: [eating, meal, food, after you eat], exertional: [exercise, exertion, exert, exert yourself, walking, stairs, effort, activity, physical activity], lying_down: [lying, lie down, bed, bending], breathing: [breathe in, breathing in, inhale, deep breath, breath in], movement: [move, moving, twist, press, touch], stress: [stress, anxious, worried, nervous]}
     zh: {postprandial: [吃饭, 饭后, 吃东西, 吃完, 饭], exertional: [活动, 走路, 爬楼, 运动, 干活, 累], lying_down: [躺, 平躺, 弯腰], breathing: [呼吸, 吸气, 深吸], movement: [动, 按, 压, 转身, 碰], stress: [紧张, 着急, 压力, 焦虑]}
   default_disclosure: on_specific_ask
   display:

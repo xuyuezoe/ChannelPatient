@@ -13,18 +13,22 @@ from scc.doctor.agent.likelihood import TableLikelihood, LLMLikelihood, default_
 from scc.doctor.agent.belief import BeliefEngine
 from scc.doctor.agent.perception import RegexPerceiver, LLMPerceiver
 from scc.doctor.agent.candidates import MenuCandidates, LLMCandidates
-from scc.doctor.agent.value import ca_ig, lookahead2
+from scc.doctor.agent.value import ca_ig, lookahead2, rvoi, lookahead2_rvoi, loss_matrix
 from scc.doctor.agent.monitor import SurprisalMonitor
-from scc.doctor.agent.policy import choose, readout
+from scc.doctor.agent.policy import choose, choose_rvoi, readout
+from scc.doctor.agent.styler import TemplateStyler, LLMStyler
 
 MANNER_LIK = {"intensity": {"exaggerate": 1.6, "cooperative": 0.7}, "flooding": {"exaggerate": 2.0, "cooperative": 0.5}}
 
 
 class BeliefAgentDoctor:
-    def __init__(self, cluster_cfg: ClusterConfig, cfg: AgentConfig, perceiver, generator, provider, lang: str = "en", name: str | None = None):
+    def __init__(self, cluster_cfg: ClusterConfig, cfg: AgentConfig, perceiver, generator, provider, lang: str = "en", name: str | None = None, styler=None):
         self.cfg, self.acfg, self.perceiver, self.generator, self.P, self.lang = cluster_cfg, cfg, perceiver, generator, provider, lang
         self.us = ["cooperative"] if cfg.z_only else list(provider.u_library.keys())
         self.name = name or ("agent_zonly" if cfg.z_only else "agent")
+        self.Lm = loss_matrix(list(cluster_cfg.ddx_set), list(cluster_cfg.red_flags), cluster_cfg.loss)
+        self.q_cost = cfg.question_cost if cfg.question_cost is not None else float(cluster_cfg.loss.get("question_cost", 0.05))
+        self.styler = styler or TemplateStyler(cfg.style, cfg.seed)
         self.reset(None)
 
     # ------------------------------------------------------------------ 状态
@@ -124,8 +128,10 @@ class BeliefAgentDoctor:
         cands = self.generator.propose(self._view(ctx))
         if not self.acfg.anchoring:
             cands = [c for c in cands if c.kind == ActionKind.ASK]
+        use_rvoi = self.acfg.objective == "rvoi"
         for c in cands:
-            c.value = ca_ig(self.belief, c, self.n_asked.get((c.slot, c.tag), 0) + 1)
+            n1 = self.n_asked.get((c.slot, c.tag), 0) + 1
+            c.value = rvoi(self.belief, c, self.Lm, n1) if use_rvoi else ca_ig(self.belief, c, n1)
             if c.kind == ActionKind.ASK and (c.slot, c.tag) in self.answered:
                 c.value = 0.0                                  # 已经答清楚的槽，再问没有价值
         cands.sort(key=lambda c: -c.value)
@@ -134,13 +140,21 @@ class BeliefAgentDoctor:
             pool = cands[: self.acfg.lookahead_top]
             for c in cands:
                 if c.is_calibration:
-                    c.value, c.value_detail = lookahead2(self.belief, c, pool, self.n_asked, self.acfg.lookahead_top)
-        action, info = choose(cands, self.belief, self.acfg, list(self.cfg.red_flags), self.n_asked, self.lang)
+                    if use_rvoi:
+                        c.value, c.value_detail = lookahead2_rvoi(self.belief, c, pool, self.Lm, self.n_asked, self.acfg.lookahead_top)
+                    else:
+                        c.value, c.value_detail = lookahead2(self.belief, c, pool, self.n_asked, self.acfg.lookahead_top)
+        if use_rvoi:
+            action, info = choose_rvoi(cands, self.belief, self.acfg, self.Lm, self.q_cost, self.n_asked, self.lang)
+        else:
+            action, info = choose(cands, self.belief, self.acfg, list(self.cfg.red_flags), self.n_asked, self.lang)
         self.decisions.append({"turn": self.turn, **info, "belief": self.belief.snapshot(), "monitor": self.monitor.snapshot()})
         chosen = next((c for c in cands if c.text == action.text and c.kind == action.kind), None)
         self.last = chosen
         if chosen is not None and chosen.slot:
             self.n_asked[(chosen.slot, chosen.tag)] = self.n_asked.get((chosen.slot, chosen.tag), 0) + 1
+        if chosen is not None and action.kind == ActionKind.ASK:
+            action = DoctorAction(action.kind, self.styler.style(chosen, ctx.transcript, self.lang), target=action.target, readout=action.readout)
         return action
 
     def stats(self) -> dict:
@@ -164,11 +178,16 @@ def build_agent_doctor(spec: dict, cluster_cfg: ClusterConfig, lang: str, client
         meta = clients.get("doctor_meta") or ChatClient(spec.get("model", "qwen3.7-max"), temperature=0.0)
         clients["doctor_meta"] = meta
     provider = LLMLikelihood(cluster_cfg, ulib, meta, lang) if acfg.likelihood == "llm" else TableLikelihood(cluster_cfg, ulib)
+    styler = None
     if comp == "llm":
         from scc.sim.classifier import KeywordClassifier
         perceiver = LLMPerceiver(cluster_cfg, meta)
         generator = LLMCandidates(cluster_cfg, meta, KeywordClassifier(cluster_cfg), acfg.anchoring, lang, acfg.n_llm_questions, acfg.n_llm_clarify)
+        if acfg.style != "concise":
+            conv = clients.get("doctor") or ChatClient(spec.get("style_model", "qwen3.7-plus"), temperature=0.5)
+            clients["doctor"] = conv
+            styler = LLMStyler(cluster_cfg, conv, KeywordClassifier(cluster_cfg), acfg.style, acfg.seed)
     else:
         perceiver = RegexPerceiver(cluster_cfg)
         generator = MenuCandidates(cluster_cfg, acfg.anchoring, lang)
-    return BeliefAgentDoctor(cluster_cfg, acfg, perceiver, generator, provider, lang, name=spec.get("name"))
+    return BeliefAgentDoctor(cluster_cfg, acfg, perceiver, generator, provider, lang, name=spec.get("name"), styler=styler)

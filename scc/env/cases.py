@@ -25,6 +25,10 @@ class ClusterConfig:
     vocab: dict
     raw: dict = field(default_factory=dict)
 
+    @property
+    def loss(self) -> dict:
+        return dict(self.raw.get("loss", {"miss_red_flag": 10.0, "false_alarm": 2.0, "wrong_benign": 1.0, "wrong_red_red": 1.0, "handoff": 1.5, "question_cost": 0.05}))
+
     # ---- display helpers
     def display(self, slot: str, value: Any, lang: str = "en") -> str:
         sd = self.slots.get(slot, {})
