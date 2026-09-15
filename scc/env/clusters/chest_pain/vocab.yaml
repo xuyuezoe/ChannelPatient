@@ -1,0 +1,30 @@
+# Vocabulary used by channel rules, template phraser, and regex checker.
+# vague_map: true value -> vague TOKEN (shared across several true values = aliasing). Token display below.
+vague_map:
+  location: {retrosternal: vague_center, epigastric: vague_center, precordial: vague_center, lateral_chest: vague_side}
+  quality:  {pressure: vague_quality, burning: vague_quality, sharp: vague_quality}
+vague_display:
+  vague_center:  {en: "somewhere in the middle of my chest, kind of near the stomach", zh: "心窝那儿"}
+  vague_side:    {en: "somewhere around the side of my chest", zh: "胸这边"}
+  vague_quality: {en: "I can't really describe it, it's just uncomfortable", zh: "说不上来，就是难受"}
+severity_words:
+  mild:     {en: ["a bit sore", "bearable", "not too bad"], zh: ["有点疼", "能忍", "不太厉害"]}
+  moderate: {en: ["quite painful", "hard to ignore", "pretty bad"], zh: ["挺疼的", "有点受不了", "不轻"]}
+  severe:   {en: ["unbearable", "the worst pain I've had", "excruciating"], zh: ["疼得要死", "受不了", "疼得不行"]}
+functional_words:
+  none:            {en: ["it doesn't stop me doing anything"], zh: ["不影响，该干嘛干嘛"]}
+  limits_activity: {en: ["I have to stop what I'm doing"], zh: ["疼起来得停下来歇着"]}
+  wakes_at_night:  {en: ["it wakes me up at night", "I couldn't sleep at all last night"], zh: ["晚上疼醒", "一晚上没睡着"]}
+withheld_phrases: {en: ["I haven't really noticed", "I'm not sure about that", "hard to say"], zh: ["没注意", "不太清楚", "说不好"]}
+flooding_phrases: {en: ["and I've been feeling tingly too", "my whole chest feels off"], zh: ["还有点发麻", "整个胸口都不对劲"]}
+self_dx_phrases:
+  open_mention: {en: "Doctor, I'm pretty sure this is {label}. ", zh: "医生，我这肯定是{label}。"}
+  insist:       {en: " Honestly, I think it's {label} — can we just check for that?", zh: " 我觉得就是{label}，能不能直接查这个？"}
+  reframe:      {en: " That fits {label}, doesn't it?", zh: " 这不就是{label}的表现吗？"}
+family_template: {en: "Family member: {text}", zh: "家属：{text}"}
+red_flag_terms:
+  en: [heart attack, myocardial, infarction, angina, embolism, pneumothorax, dissection, cardiac, coronary, ischemia, stemi, troponin, unstable]
+  zh: [心梗, 心肌梗死, 心绞痛, 栓塞, 气胸, 夹层, 冠心病, 缺血, 心源性]
+diagnosis_terms:
+  en: [GERD, reflux, esophagitis, costochondritis, pericarditis, panic attack, anxiety attack]
+  zh: [反流性食管炎, 反流, 食管炎, 肋软骨炎, 心包炎, 惊恐发作, 惊恐]

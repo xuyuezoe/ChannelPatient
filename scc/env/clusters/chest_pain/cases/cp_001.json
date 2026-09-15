@@ -1,0 +1,379 @@
+{
+  "case_id": "cp_001",
+  "cluster": "chest_pain",
+  "source": {
+    "dataset": "handwritten",
+    "id": null,
+    "reviewed_by": "pending",
+    "reviewed_on": null,
+    "notes": "typical GERD: epigastric burning, postprandial, worse lying down, antacid helps; prior ECG borderline (anchor)"
+  },
+  "demographics": {
+    "age": 54,
+    "sex": "M",
+    "occupation": "truck driver"
+  },
+  "labels": {
+    "primary_dx": "GERD",
+    "ddx_set": [
+      "GERD",
+      "stable_angina",
+      "pericarditis",
+      "panic_attack",
+      "costochondritis"
+    ],
+    "red_flags": [
+      "stable_angina"
+    ]
+  },
+  "atoms": [
+    {
+      "id": "cp_present",
+      "slot": "chief_complaint",
+      "type": "bool",
+      "true_value": true,
+      "disclosure": "spontaneous"
+    },
+    {
+      "id": "cp_location",
+      "slot": "location",
+      "type": "categorical",
+      "true_value": "epigastric",
+      "options": [
+        "retrosternal",
+        "epigastric",
+        "precordial",
+        "lateral_chest"
+      ],
+      "disclosure": "on_general_ask"
+    },
+    {
+      "id": "cp_quality",
+      "slot": "quality",
+      "type": "categorical",
+      "true_value": "burning",
+      "options": [
+        "pressure",
+        "burning",
+        "sharp"
+      ],
+      "disclosure": "on_specific_ask"
+    },
+    {
+      "id": "cp_severity",
+      "slot": "severity",
+      "type": "ordinal_3",
+      "true_value": "mild",
+      "options": [
+        "mild",
+        "moderate",
+        "severe"
+      ],
+      "disclosure": "on_general_ask"
+    },
+    {
+      "id": "cp_functional",
+      "slot": "functional_impact",
+      "type": "categorical",
+      "true_value": "none",
+      "options": [
+        "none",
+        "limits_activity",
+        "wakes_at_night"
+      ],
+      "disclosure": "on_specific_ask"
+    },
+    {
+      "id": "cp_pattern",
+      "slot": "pattern",
+      "type": "categorical",
+      "true_value": "episodic",
+      "options": [
+        "episodic",
+        "constant"
+      ],
+      "disclosure": "on_specific_ask"
+    },
+    {
+      "id": "cp_duration",
+      "slot": "duration",
+      "type": "categorical",
+      "true_value": "weeks",
+      "options": [
+        "hours",
+        "days",
+        "weeks",
+        "months"
+      ],
+      "disclosure": "on_general_ask"
+    },
+    {
+      "id": "cp_onset",
+      "slot": "onset",
+      "type": "categorical",
+      "true_value": "gradual",
+      "options": [
+        "sudden",
+        "gradual"
+      ],
+      "disclosure": "on_specific_ask"
+    },
+    {
+      "id": "trig_meal",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": true,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "postprandial"
+      ]
+    },
+    {
+      "id": "trig_exertion",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "exertional"
+      ]
+    },
+    {
+      "id": "trig_lying",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": true,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "lying_down"
+      ]
+    },
+    {
+      "id": "trig_breathing",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "breathing"
+      ]
+    },
+    {
+      "id": "trig_movement",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "movement"
+      ]
+    },
+    {
+      "id": "rel_antacid",
+      "slot": "relief",
+      "type": "bool",
+      "true_value": true,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "antacid"
+      ]
+    },
+    {
+      "id": "rel_rest",
+      "slot": "relief",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "rest"
+      ]
+    },
+    {
+      "id": "cp_radiation",
+      "slot": "radiation",
+      "type": "categorical",
+      "true_value": "none",
+      "options": [
+        "none",
+        "arm",
+        "jaw",
+        "back"
+      ],
+      "disclosure": "on_specific_ask"
+    },
+    {
+      "id": "assoc_sweating",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "sweating"
+      ]
+    },
+    {
+      "id": "assoc_dyspnea",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "dyspnea"
+      ]
+    },
+    {
+      "id": "assoc_nausea",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "nausea"
+      ]
+    },
+    {
+      "id": "assoc_palp",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "palpitations"
+      ]
+    },
+    {
+      "id": "assoc_acid",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": true,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "acid_taste"
+      ]
+    },
+    {
+      "id": "prior_severity",
+      "slot": "prior_severity",
+      "type": "ordinal_3",
+      "true_value": "mild",
+      "options": [
+        "mild",
+        "moderate",
+        "severe"
+      ],
+      "disclosure": "on_specific_ask",
+      "verifiable_by": "record"
+    },
+    {
+      "id": "prior_ecg",
+      "slot": "prior_test",
+      "type": "text",
+      "true_value": "ECG 3 months ago: flattened T waves in lateral leads, repeat advised; no further work-up done",
+      "disclosure": "on_specific_ask",
+      "verifiable_by": "record"
+    },
+    {
+      "id": "fam_cad",
+      "slot": "family_history",
+      "type": "bool",
+      "true_value": true,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": "family",
+      "tags": [
+        "cad"
+      ]
+    },
+    {
+      "id": "life_smoking",
+      "slot": "lifestyle",
+      "type": "categorical",
+      "true_value": "10_per_day",
+      "options": [
+        "none",
+        "occasional",
+        "10_per_day",
+        "20_per_day"
+      ],
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "smoking"
+      ]
+    },
+    {
+      "id": "life_alcohol",
+      "slot": "lifestyle",
+      "type": "categorical",
+      "true_value": "occasional",
+      "options": [
+        "none",
+        "occasional",
+        "daily"
+      ],
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "alcohol"
+      ]
+    },
+    {
+      "id": "hx_htn",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": true,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "hypertension"
+      ]
+    },
+    {
+      "id": "hx_reflux",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": true,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "reflux"
+      ]
+    },
+    {
+      "id": "hx_cad",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "cad"
+      ]
+    },
+    {
+      "id": "meds",
+      "slot": "medication",
+      "type": "categorical",
+      "true_value": "antihypertensive",
+      "options": [
+        "none",
+        "antacid",
+        "antihypertensive",
+        "aspirin",
+        "anxiolytic",
+        "painkiller"
+      ],
+      "disclosure": "on_specific_ask"
+    }
+  ],
+  "exam_and_tests": {
+    "Physical_Examination_Findings": {
+      "Vital_Signs": {
+        "Blood_Pressure": "138/86 mmHg",
+        "Heart_Rate": "78 bpm",
+        "Temperature": "36.7 C"
+      },
+      "Chest": "No reproducible chest wall tenderness; lungs clear",
+      "Abdomen": "Mild epigastric tenderness, no guarding"
+    },
+    "Test_Results": {
+      "ECG": "Normal sinus rhythm, no acute ST changes; nonspecific T-wave flattening unchanged from prior",
+      "Troponin": "Negative",
+      "Endoscopy": "Grade A reflux esophagitis"
+    }
+  }
+}

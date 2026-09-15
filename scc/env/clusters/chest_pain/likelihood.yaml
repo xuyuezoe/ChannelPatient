@@ -1,0 +1,93 @@
+# P(true value | dx, slot) for the chest-pain cluster. Medical "small table" for the oracle.
+# Sources: [D] = DDXPlus test-split frequency (results/ddxplus_likelihood_stats.yaml, 2026-09-14), [M] = manual (clinical common sense).
+# DDXPlus pain intensity is inflated for every condition (GERD 42% severe); severity rows are [M]-adjusted.
+# Numbers only need the right direction (MASTER_PLAN: rankings robust to ±80% noise). Each row sums to 1;
+# bool tagged slots give P(true). Missing entries -> uniform.
+_meta:
+  cluster: chest_pain
+  sources: {D: ddxplus_test_2026-09-14, M: manual}
+GERD:
+  prior_severity: {mild: 0.60, moderate: 0.30, severe: 0.10}   # [M] recorded severity at a previous visit (verifiable)
+  location:   {retrosternal: 0.35, epigastric: 0.55, precordial: 0.07, lateral_chest: 0.03}   # [D] epi .51 retro .49; [M] shifted to epigastric
+  quality:    {pressure: 0.15, burning: 0.70, sharp: 0.15}                                    # [D] burning .56
+  severity:   {mild: 0.50, moderate: 0.40, severe: 0.10}                                      # [M]
+  functional_impact: {none: 0.55, limits_activity: 0.20, wakes_at_night: 0.25}                # [M] nocturnal reflux
+  pattern:    {episodic: 0.75, constant: 0.25}                                                # [M]
+  duration:   {hours: 0.05, days: 0.20, weeks: 0.40, months: 0.35}                            # [M]
+  onset:      {sudden: 0.15, gradual: 0.85}                                                   # [D]
+  radiation:  {none: 0.85, arm: 0.03, jaw: 0.02, back: 0.10}                                  # [D] none 1.0; [M]
+  trigger:    {postprandial: 0.80, exertional: 0.10, lying_down: 0.70, breathing: 0.05, movement: 0.05, stress: 0.20}   # [M]
+  relief:     {rest: 0.15, antacid: 0.80, leaning_forward: 0.20}                              # [M]
+  associated: {sweating: 0.05, dyspnea: 0.10, nausea: 0.25, palpitations: 0.08, dizziness: 0.05, acid_taste: 0.75, cough: 0.20, fever: 0.02}   # [M]
+  family_history: {cad: 0.25, sudden_death: 0.03, reflux: 0.30}                               # [M] population baseline
+  medical_history: {hypertension: 0.30, diabetes: 0.12, reflux: 0.60, anxiety: 0.15, cad: 0.05, hyperlipidemia: 0.25}   # [M]
+  lifestyle:  {smoking: {none: 0.45, occasional: 0.15, 10_per_day: 0.25, 20_per_day: 0.15}, alcohol: {none: 0.35, occasional: 0.45, daily: 0.20}}   # [M]
+  medication: {none: 0.35, antacid: 0.35, antihypertensive: 0.15, aspirin: 0.05, anxiolytic: 0.03, painkiller: 0.07}   # [M]
+stable_angina:
+  prior_severity: {mild: 0.35, moderate: 0.45, severe: 0.20}   # [M] recorded severity at a previous visit (verifiable)
+  location:   {retrosternal: 0.65, epigastric: 0.15, precordial: 0.17, lateral_chest: 0.03}   # [D] retro .62 epi .34 precordial .04; [M] precordial up
+  quality:    {pressure: 0.80, burning: 0.10, sharp: 0.10}                                    # [D] pressure 1.0
+  severity:   {mild: 0.20, moderate: 0.55, severe: 0.25}                                      # [M]
+  functional_impact: {none: 0.20, limits_activity: 0.70, wakes_at_night: 0.10}                # [M]
+  pattern:    {episodic: 0.90, constant: 0.10}                                                # [M]
+  duration:   {hours: 0.05, days: 0.10, weeks: 0.35, months: 0.50}                            # [M]
+  onset:      {sudden: 0.55, gradual: 0.45}                                                   # [D]
+  radiation:  {none: 0.35, arm: 0.40, jaw: 0.15, back: 0.10}                                  # [D] arm .99 (multi-select artefact); [M]
+  trigger:    {postprandial: 0.15, exertional: 0.90, lying_down: 0.10, breathing: 0.05, movement: 0.05, stress: 0.40}   # [M]
+  relief:     {rest: 0.90, antacid: 0.10, leaning_forward: 0.10}                              # [M]
+  associated: {sweating: 0.45, dyspnea: 0.55, nausea: 0.25, palpitations: 0.25, dizziness: 0.15, acid_taste: 0.10, cough: 0.05, fever: 0.02}   # [D] dyspnea .60 palp .64; [M]
+  family_history: {cad: 0.55, sudden_death: 0.10, reflux: 0.20}                               # [M]
+  medical_history: {hypertension: 0.65, diabetes: 0.35, reflux: 0.15, anxiety: 0.10, cad: 0.50, hyperlipidemia: 0.60}   # [D] cad .81; [M]
+  lifestyle:  {smoking: {none: 0.30, occasional: 0.10, 10_per_day: 0.30, 20_per_day: 0.30}, alcohol: {none: 0.35, occasional: 0.45, daily: 0.20}}   # [M]
+  medication: {none: 0.20, antacid: 0.05, antihypertensive: 0.45, aspirin: 0.25, anxiolytic: 0.02, painkiller: 0.03}   # [M]
+pericarditis:
+  prior_severity: {mild: 0.45, moderate: 0.40, severe: 0.15}   # [M] recorded severity at a previous visit (verifiable)
+  location:   {retrosternal: 0.60, epigastric: 0.15, precordial: 0.22, lateral_chest: 0.03}   # [D] retro .71 epi .26
+  quality:    {pressure: 0.15, burning: 0.05, sharp: 0.80}                                    # [D] sharp 1.0
+  severity:   {mild: 0.15, moderate: 0.45, severe: 0.40}                                      # [D] mod .43 sev .57; [M]
+  functional_impact: {none: 0.20, limits_activity: 0.50, wakes_at_night: 0.30}                # [M]
+  pattern:    {episodic: 0.30, constant: 0.70}                                                # [M]
+  duration:   {hours: 0.20, days: 0.60, weeks: 0.15, months: 0.05}                            # [M]
+  onset:      {sudden: 0.60, gradual: 0.40}                                                   # [D]
+  radiation:  {none: 0.35, arm: 0.10, jaw: 0.05, back: 0.50}                                  # [D] back .99; [M]
+  trigger:    {postprandial: 0.05, exertional: 0.15, lying_down: 0.70, breathing: 0.75, movement: 0.30, stress: 0.10}   # [D] breathing .70; [M]
+  relief:     {rest: 0.20, antacid: 0.05, leaning_forward: 0.75}                              # [M]
+  associated: {sweating: 0.15, dyspnea: 0.50, nausea: 0.10, palpitations: 0.20, dizziness: 0.10, acid_taste: 0.05, cough: 0.25, fever: 0.50}   # [D] dyspnea .62; [M]
+  family_history: {cad: 0.25, sudden_death: 0.03, reflux: 0.20}                               # [M]
+  medical_history: {hypertension: 0.25, diabetes: 0.10, reflux: 0.15, anxiety: 0.10, cad: 0.08, hyperlipidemia: 0.20}   # [M]
+  lifestyle:  {smoking: {none: 0.50, occasional: 0.15, 10_per_day: 0.20, 20_per_day: 0.15}, alcohol: {none: 0.35, occasional: 0.45, daily: 0.20}}   # [M]
+  medication: {none: 0.55, antacid: 0.05, antihypertensive: 0.15, aspirin: 0.05, anxiolytic: 0.03, painkiller: 0.17}   # [M]
+panic_attack:
+  prior_severity: {mild: 0.40, moderate: 0.40, severe: 0.20}   # [M] recorded severity at a previous visit (verifiable)
+  location:   {retrosternal: 0.20, epigastric: 0.20, precordial: 0.35, lateral_chest: 0.25}   # [D] lateral .42 epi .37 precordial .12; [M]
+  quality:    {pressure: 0.35, burning: 0.10, sharp: 0.55}                                    # [D] sharp/cramp; [M] tightness common
+  severity:   {mild: 0.30, moderate: 0.45, severe: 0.25}                                      # [D] .29/.42/.29
+  functional_impact: {none: 0.35, limits_activity: 0.50, wakes_at_night: 0.15}                # [M]
+  pattern:    {episodic: 0.90, constant: 0.10}                                                # [M]
+  duration:   {hours: 0.30, days: 0.25, weeks: 0.25, months: 0.20}                            # [M]
+  onset:      {sudden: 0.85, gradual: 0.15}                                                   # [D]
+  radiation:  {none: 0.85, arm: 0.08, jaw: 0.02, back: 0.05}                                  # [D] none 1.0; [M]
+  trigger:    {postprandial: 0.05, exertional: 0.15, lying_down: 0.10, breathing: 0.15, movement: 0.05, stress: 0.85}   # [M]
+  relief:     {rest: 0.40, antacid: 0.05, leaning_forward: 0.10}                              # [M]
+  associated: {sweating: 0.55, dyspnea: 0.70, nausea: 0.30, palpitations: 0.75, dizziness: 0.55, acid_taste: 0.05, cough: 0.03, fever: 0.02}   # [D] dyspnea .70 palp .58; [M]
+  family_history: {cad: 0.25, sudden_death: 0.03, reflux: 0.20}                               # [M]
+  medical_history: {hypertension: 0.20, diabetes: 0.08, reflux: 0.15, anxiety: 0.65, cad: 0.03, hyperlipidemia: 0.15}   # [M]
+  lifestyle:  {smoking: {none: 0.45, occasional: 0.20, 10_per_day: 0.20, 20_per_day: 0.15}, alcohol: {none: 0.35, occasional: 0.45, daily: 0.20}}   # [M]
+  medication: {none: 0.50, antacid: 0.05, antihypertensive: 0.10, aspirin: 0.03, anxiolytic: 0.25, painkiller: 0.07}   # [M]
+costochondritis:
+  prior_severity: {mild: 0.60, moderate: 0.30, severe: 0.10}   # [M] recorded severity at a previous visit (verifiable)
+  location:   {retrosternal: 0.25, epigastric: 0.05, precordial: 0.40, lateral_chest: 0.30}   # [M] (no DDXPlus condition; rib-fracture pattern used as reference)
+  quality:    {pressure: 0.15, burning: 0.05, sharp: 0.80}                                    # [M]
+  severity:   {mild: 0.55, moderate: 0.35, severe: 0.10}                                      # [M]
+  functional_impact: {none: 0.55, limits_activity: 0.35, wakes_at_night: 0.10}                # [M]
+  pattern:    {episodic: 0.55, constant: 0.45}                                                # [M]
+  duration:   {hours: 0.05, days: 0.45, weeks: 0.40, months: 0.10}                            # [M]
+  onset:      {sudden: 0.35, gradual: 0.65}                                                   # [M]
+  radiation:  {none: 0.90, arm: 0.05, jaw: 0.01, back: 0.04}                                  # [M]
+  trigger:    {postprandial: 0.03, exertional: 0.25, lying_down: 0.15, breathing: 0.60, movement: 0.90, stress: 0.05}   # [M] rib fracture E_216 1.0, E_220 1.0
+  relief:     {rest: 0.50, antacid: 0.03, leaning_forward: 0.10}                              # [M]
+  associated: {sweating: 0.03, dyspnea: 0.10, nausea: 0.03, palpitations: 0.05, dizziness: 0.03, acid_taste: 0.05, cough: 0.15, fever: 0.03}   # [M]
+  family_history: {cad: 0.25, sudden_death: 0.03, reflux: 0.20}                               # [M]
+  medical_history: {hypertension: 0.15, diabetes: 0.05, reflux: 0.10, anxiety: 0.10, cad: 0.02, hyperlipidemia: 0.10}   # [M]
+  lifestyle:  {smoking: {none: 0.50, occasional: 0.20, 10_per_day: 0.20, 20_per_day: 0.10}, alcohol: {none: 0.35, occasional: 0.45, daily: 0.20}}   # [M]
+  medication: {none: 0.45, antacid: 0.03, antihypertensive: 0.10, aspirin: 0.02, anxiolytic: 0.05, painkiller: 0.35}   # [M]

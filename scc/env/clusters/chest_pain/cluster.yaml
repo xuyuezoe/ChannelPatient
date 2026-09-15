@@ -1,0 +1,28 @@
+# Chest-pain cluster. ddx_set are the latent worlds Z; red_flags must always be discoverable.
+name: chest_pain
+ddx_set: [GERD, stable_angina, pericarditis, panic_attack, costochondritis]
+red_flags: [stable_angina]
+prior_z: uniform
+display:
+  GERD:            {en: "acid reflux (GERD)",        zh: "反流性食管炎"}
+  stable_angina:   {en: "angina (heart-related chest pain)", zh: "心绞痛"}
+  pericarditis:    {en: "pericarditis",              zh: "心包炎"}
+  panic_attack:    {en: "panic attack",              zh: "惊恐发作"}
+  costochondritis: {en: "chest wall pain (costochondritis)", zh: "肋软骨炎"}
+# self-diagnosis label: true dx -> plausible WRONG labels a layperson would pick
+plausible_wrong:
+  GERD:            [stable_angina]
+  costochondritis: [stable_angina]
+  panic_attack:    [stable_angina]
+  pericarditis:    [stable_angina, GERD]
+  stable_angina:   [GERD, costochondritis]
+# Oracle's hypothesis set over U. Names -> list of ChannelSpec. Experiments may override.
+u_library:
+  cooperative:   []
+  exaggerate_k1: [{kind: exaggerate, params: {k: 1, flooding_rate: 0.1}}]
+  exaggerate_k2: [{kind: exaggerate, params: {k: 2, flooding_rate: 0.3}}]
+  vague_p08:     [{kind: vague, params: {p: 0.8}}]
+  omit_q05:      [{kind: omit, params: {q: 0.5, soften: {2: 0.6, 3: 0.4}}}]
+prior_u: uniform
+# DDXPlus provenance for likelihood initial values
+ddxplus_conditions: {GERD: GERD, stable_angina: "Stable angina", pericarditis: Pericarditis, panic_attack: "Panic attack", costochondritis: null}

@@ -1,0 +1,20 @@
+# secrets
+.env
+pilot/.env
+# generated
+results/episodes/
+results/interactive/*.pkl
+results/interactive/*.jsonl
+.cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+# data that must be obtained by each user (licences / size) — see data/MANIFEST.md
+data/external/
+data/imcs21/
+data/meddialog_zh/
+data/style/*/*.jsonl
+# upstream repositories: clone them yourself (pinned commits in README)
+external/PatientsWithPersonality/
+external/AgentClinic/
+external/cpb-bench/

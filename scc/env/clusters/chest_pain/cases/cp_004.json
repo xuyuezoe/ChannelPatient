@@ -1,0 +1,486 @@
+{
+  "case_id": "cp_004",
+  "cluster": "chest_pain",
+  "source": {
+    "dataset": "ddxplus",
+    "id": "test:0",
+    "condition": "GERD",
+    "reviewed_by": "pending",
+    "reviewed_on": null,
+    "notes": "atoms from DDXPlus evidences where mapped; other slots from per-dx template"
+  },
+  "demographics": {
+    "age": 40,
+    "sex": "F",
+    "occupation": "software engineer"
+  },
+  "labels": {
+    "primary_dx": "GERD",
+    "ddx_set": [
+      "GERD",
+      "stable_angina",
+      "pericarditis",
+      "panic_attack",
+      "costochondritis"
+    ],
+    "red_flags": [
+      "stable_angina"
+    ]
+  },
+  "atoms": [
+    {
+      "id": "cp_present",
+      "slot": "chief_complaint",
+      "type": "bool",
+      "true_value": true,
+      "options": null,
+      "disclosure": "spontaneous",
+      "verifiable_by": null,
+      "tags": []
+    },
+    {
+      "id": "cp_location",
+      "slot": "location",
+      "type": "categorical",
+      "true_value": "epigastric",
+      "options": [
+        "retrosternal",
+        "epigastric",
+        "precordial",
+        "lateral_chest"
+      ],
+      "disclosure": "on_general_ask",
+      "verifiable_by": null,
+      "tags": []
+    },
+    {
+      "id": "cp_quality",
+      "slot": "quality",
+      "type": "categorical",
+      "true_value": "sharp",
+      "options": [
+        "pressure",
+        "burning",
+        "sharp"
+      ],
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": []
+    },
+    {
+      "id": "cp_severity",
+      "slot": "severity",
+      "type": "ordinal_3",
+      "true_value": "moderate",
+      "options": [
+        "mild",
+        "moderate",
+        "severe"
+      ],
+      "disclosure": "on_general_ask",
+      "verifiable_by": null,
+      "tags": []
+    },
+    {
+      "id": "cp_functional",
+      "slot": "functional_impact",
+      "type": "categorical",
+      "true_value": "none",
+      "options": [
+        "none",
+        "limits_activity",
+        "wakes_at_night"
+      ],
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": []
+    },
+    {
+      "id": "cp_pattern",
+      "slot": "pattern",
+      "type": "categorical",
+      "true_value": "episodic",
+      "options": [
+        "episodic",
+        "constant"
+      ],
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": []
+    },
+    {
+      "id": "cp_duration",
+      "slot": "duration",
+      "type": "categorical",
+      "true_value": "weeks",
+      "options": [
+        "hours",
+        "days",
+        "weeks",
+        "months"
+      ],
+      "disclosure": "on_general_ask",
+      "verifiable_by": null,
+      "tags": []
+    },
+    {
+      "id": "cp_onset",
+      "slot": "onset",
+      "type": "categorical",
+      "true_value": "gradual",
+      "options": [
+        "sudden",
+        "gradual"
+      ],
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": []
+    },
+    {
+      "id": "trig_postprandial",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": true,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "postprandial"
+      ]
+    },
+    {
+      "id": "trig_exertional",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "exertional"
+      ]
+    },
+    {
+      "id": "trig_lying_down",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": true,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "lying_down"
+      ]
+    },
+    {
+      "id": "trig_breathing",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "breathing"
+      ]
+    },
+    {
+      "id": "trig_movement",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "movement"
+      ]
+    },
+    {
+      "id": "trig_stress",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "stress"
+      ]
+    },
+    {
+      "id": "rel_antacid",
+      "slot": "relief",
+      "type": "bool",
+      "true_value": true,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "antacid"
+      ]
+    },
+    {
+      "id": "rel_rest",
+      "slot": "relief",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "rest"
+      ]
+    },
+    {
+      "id": "cp_radiation",
+      "slot": "radiation",
+      "type": "categorical",
+      "true_value": "none",
+      "options": [
+        "none",
+        "arm",
+        "jaw",
+        "back"
+      ],
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": []
+    },
+    {
+      "id": "assoc_sweating",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "sweating"
+      ]
+    },
+    {
+      "id": "assoc_dyspnea",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "dyspnea"
+      ]
+    },
+    {
+      "id": "assoc_nausea",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "nausea"
+      ]
+    },
+    {
+      "id": "assoc_palpitations",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "palpitations"
+      ]
+    },
+    {
+      "id": "assoc_dizziness",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "dizziness"
+      ]
+    },
+    {
+      "id": "assoc_acid_taste",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": true,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "acid_taste"
+      ]
+    },
+    {
+      "id": "assoc_cough",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "cough"
+      ]
+    },
+    {
+      "id": "assoc_fever",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "fever"
+      ]
+    },
+    {
+      "id": "prior_severity",
+      "slot": "prior_severity",
+      "type": "ordinal_3",
+      "true_value": "mild",
+      "options": [
+        "mild",
+        "moderate",
+        "severe"
+      ],
+      "disclosure": "on_specific_ask",
+      "verifiable_by": "record",
+      "tags": []
+    },
+    {
+      "id": "prior_test",
+      "slot": "prior_test",
+      "type": "text",
+      "true_value": "ECG 6 months ago at a walk-in clinic: normal; told it was probably the stomach",
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": "record",
+      "tags": []
+    },
+    {
+      "id": "fam_cad",
+      "slot": "family_history",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": "family",
+      "tags": [
+        "cad"
+      ]
+    },
+    {
+      "id": "life_smoking",
+      "slot": "lifestyle",
+      "type": "categorical",
+      "true_value": "20_per_day",
+      "options": [
+        "none",
+        "occasional",
+        "10_per_day",
+        "20_per_day"
+      ],
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "smoking"
+      ]
+    },
+    {
+      "id": "life_alcohol",
+      "slot": "lifestyle",
+      "type": "categorical",
+      "true_value": "daily",
+      "options": [
+        "none",
+        "occasional",
+        "daily"
+      ],
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "alcohol"
+      ]
+    },
+    {
+      "id": "hx_reflux",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": true,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "reflux"
+      ]
+    },
+    {
+      "id": "hx_hypertension",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "hypertension"
+      ]
+    },
+    {
+      "id": "hx_cad",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": false,
+      "options": null,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": [
+        "cad"
+      ]
+    },
+    {
+      "id": "meds",
+      "slot": "medication",
+      "type": "categorical",
+      "true_value": "antacid",
+      "options": [
+        "none",
+        "antacid",
+        "antihypertensive",
+        "aspirin",
+        "anxiolytic",
+        "painkiller"
+      ],
+      "disclosure": "on_specific_ask",
+      "verifiable_by": null,
+      "tags": []
+    }
+  ],
+  "exam_and_tests": {
+    "Physical_Examination_Findings": {
+      "Vital_Signs": {
+        "Blood_Pressure": "123/78 mmHg",
+        "Heart_Rate": "81 bpm",
+        "Temperature": "36.7 C"
+      },
+      "Chest": "No reproducible tenderness; lungs clear",
+      "Abdomen": "Mild epigastric tenderness"
+    },
+    "Test_Results": {
+      "ECG": "Normal sinus rhythm",
+      "Troponin": "Negative",
+      "Endoscopy": "Grade A esophagitis"
+    }
+  },
+  "lang_notes": {}
+}

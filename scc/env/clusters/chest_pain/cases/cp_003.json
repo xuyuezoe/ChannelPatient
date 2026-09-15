@@ -1,0 +1,379 @@
+{
+  "case_id": "cp_003",
+  "cluster": "chest_pain",
+  "source": {
+    "dataset": "handwritten",
+    "id": null,
+    "reviewed_by": "pending",
+    "reviewed_on": null,
+    "notes": "typical costochondritis: lateral/precordial sharp pain reproduced by pressing and movement, after heavy lifting; prior ECG normal (anchor)"
+  },
+  "demographics": {
+    "age": 34,
+    "sex": "M",
+    "occupation": "warehouse worker"
+  },
+  "labels": {
+    "primary_dx": "costochondritis",
+    "ddx_set": [
+      "GERD",
+      "stable_angina",
+      "pericarditis",
+      "panic_attack",
+      "costochondritis"
+    ],
+    "red_flags": [
+      "stable_angina"
+    ]
+  },
+  "atoms": [
+    {
+      "id": "cp_present",
+      "slot": "chief_complaint",
+      "type": "bool",
+      "true_value": true,
+      "disclosure": "spontaneous"
+    },
+    {
+      "id": "cp_location",
+      "slot": "location",
+      "type": "categorical",
+      "true_value": "precordial",
+      "options": [
+        "retrosternal",
+        "epigastric",
+        "precordial",
+        "lateral_chest"
+      ],
+      "disclosure": "on_general_ask"
+    },
+    {
+      "id": "cp_quality",
+      "slot": "quality",
+      "type": "categorical",
+      "true_value": "sharp",
+      "options": [
+        "pressure",
+        "burning",
+        "sharp"
+      ],
+      "disclosure": "on_specific_ask"
+    },
+    {
+      "id": "cp_severity",
+      "slot": "severity",
+      "type": "ordinal_3",
+      "true_value": "mild",
+      "options": [
+        "mild",
+        "moderate",
+        "severe"
+      ],
+      "disclosure": "on_general_ask"
+    },
+    {
+      "id": "cp_functional",
+      "slot": "functional_impact",
+      "type": "categorical",
+      "true_value": "none",
+      "options": [
+        "none",
+        "limits_activity",
+        "wakes_at_night"
+      ],
+      "disclosure": "on_specific_ask"
+    },
+    {
+      "id": "cp_pattern",
+      "slot": "pattern",
+      "type": "categorical",
+      "true_value": "episodic",
+      "options": [
+        "episodic",
+        "constant"
+      ],
+      "disclosure": "on_specific_ask"
+    },
+    {
+      "id": "cp_duration",
+      "slot": "duration",
+      "type": "categorical",
+      "true_value": "days",
+      "options": [
+        "hours",
+        "days",
+        "weeks",
+        "months"
+      ],
+      "disclosure": "on_general_ask"
+    },
+    {
+      "id": "cp_onset",
+      "slot": "onset",
+      "type": "categorical",
+      "true_value": "gradual",
+      "options": [
+        "sudden",
+        "gradual"
+      ],
+      "disclosure": "on_specific_ask"
+    },
+    {
+      "id": "trig_meal",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "postprandial"
+      ]
+    },
+    {
+      "id": "trig_exertion",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "exertional"
+      ]
+    },
+    {
+      "id": "trig_lying",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "lying_down"
+      ]
+    },
+    {
+      "id": "trig_breathing",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": true,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "breathing"
+      ]
+    },
+    {
+      "id": "trig_movement",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": true,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "movement"
+      ]
+    },
+    {
+      "id": "rel_rest",
+      "slot": "relief",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "rest"
+      ]
+    },
+    {
+      "id": "rel_antacid",
+      "slot": "relief",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "antacid"
+      ]
+    },
+    {
+      "id": "cp_radiation",
+      "slot": "radiation",
+      "type": "categorical",
+      "true_value": "none",
+      "options": [
+        "none",
+        "arm",
+        "jaw",
+        "back"
+      ],
+      "disclosure": "on_specific_ask"
+    },
+    {
+      "id": "assoc_sweating",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "sweating"
+      ]
+    },
+    {
+      "id": "assoc_dyspnea",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "dyspnea"
+      ]
+    },
+    {
+      "id": "assoc_nausea",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "nausea"
+      ]
+    },
+    {
+      "id": "assoc_palp",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "palpitations"
+      ]
+    },
+    {
+      "id": "assoc_cough",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "cough"
+      ]
+    },
+    {
+      "id": "prior_severity",
+      "slot": "prior_severity",
+      "type": "ordinal_3",
+      "true_value": "mild",
+      "options": [
+        "mild",
+        "moderate",
+        "severe"
+      ],
+      "disclosure": "on_specific_ask",
+      "verifiable_by": "record"
+    },
+    {
+      "id": "prior_ecg",
+      "slot": "prior_test",
+      "type": "text",
+      "true_value": "ECG last week at urgent care: normal; told it was probably muscular",
+      "disclosure": "on_specific_ask",
+      "verifiable_by": "record"
+    },
+    {
+      "id": "fam_cad",
+      "slot": "family_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "verifiable_by": "family",
+      "tags": [
+        "cad"
+      ]
+    },
+    {
+      "id": "life_smoking",
+      "slot": "lifestyle",
+      "type": "categorical",
+      "true_value": "occasional",
+      "options": [
+        "none",
+        "occasional",
+        "10_per_day",
+        "20_per_day"
+      ],
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "smoking"
+      ]
+    },
+    {
+      "id": "life_alcohol",
+      "slot": "lifestyle",
+      "type": "categorical",
+      "true_value": "occasional",
+      "options": [
+        "none",
+        "occasional",
+        "daily"
+      ],
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "alcohol"
+      ]
+    },
+    {
+      "id": "hx_htn",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "hypertension"
+      ]
+    },
+    {
+      "id": "hx_reflux",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "reflux"
+      ]
+    },
+    {
+      "id": "hx_anxiety",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "anxiety"
+      ]
+    },
+    {
+      "id": "meds",
+      "slot": "medication",
+      "type": "categorical",
+      "true_value": "painkiller",
+      "options": [
+        "none",
+        "antacid",
+        "antihypertensive",
+        "aspirin",
+        "anxiolytic",
+        "painkiller"
+      ],
+      "disclosure": "on_specific_ask"
+    }
+  ],
+  "exam_and_tests": {
+    "Physical_Examination_Findings": {
+      "Vital_Signs": {
+        "Blood_Pressure": "122/78 mmHg",
+        "Heart_Rate": "72 bpm",
+        "Temperature": "36.8 C"
+      },
+      "Chest": "Reproducible tenderness over the 3rd-4th left costochondral junctions; lungs clear; no rub",
+      "Abdomen": "Soft, non-tender"
+    },
+    "Test_Results": {
+      "ECG": "Normal sinus rhythm, no abnormalities",
+      "Troponin": "Negative",
+      "Chest_X-Ray": "Normal"
+    }
+  }
+}

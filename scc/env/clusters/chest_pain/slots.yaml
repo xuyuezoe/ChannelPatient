@@ -1,0 +1,179 @@
+# Slot definitions. Every atom.slot must be a key here. `tag_options` lists allowed atom.tags for tagged slots.
+# keywords: used by KeywordClassifier (stub). display: value -> patient-facing words. ddxplus: mapping hints for build_cases.
+chief_complaint:
+  type: bool
+  keywords: {en: [what brings, problem, wrong, bother, help you, "how can i help"], zh: [哪里不舒服, 怎么了, 什么问题, 哪儿不舒服, 怎么不舒服]}
+  default_disclosure: spontaneous
+  display: {en: {true: "chest pain"}, zh: {true: "胸口疼"}}
+  ddxplus: {evidence: E_53}
+location:
+  type: categorical
+  options: [retrosternal, epigastric, precordial, lateral_chest]
+  keywords: {en: [where, location, exactly, spot, point, show me, breastbone, above the stomach, left side, side of the chest, middle of the chest], zh: [哪里, 位置, 哪儿, 指一下, 哪个地方, 具体, 胸骨, 胃上面, 胸口, 左胸, 胸的, 心口]}
+  reask: {en: ["Where exactly is the pain?", "Can you show me the spot where it hurts?"], zh: ["具体疼在哪里？", "你指一下疼的地方。"]}
+  default_disclosure: on_general_ask
+  display:
+    en: {retrosternal: "right behind the breastbone", epigastric: "just above the stomach, below the chest", precordial: "over the left side of the chest, near the heart", lateral_chest: "on the side of the chest"}
+    zh: {retrosternal: "胸骨后面正中间", epigastric: "胃上面一点，胸口下面", precordial: "左胸口，心脏那边", lateral_chest: "胸的侧面"}
+  ddxplus: {evidence: E_55, map: {V_29: epigastric, V_197: epigastric, V_101: retrosternal, V_159: precordial, V_160: precordial, V_55: lateral_chest, V_56: lateral_chest}}
+quality:
+  type: categorical
+  options: [pressure, burning, sharp]
+  keywords: {en: [what kind, feel like, describe, sort of pain, type of pain, pressure, burning, sharp, stabbing], zh: [什么样, 怎么个疼, 性质, 压着, 烧, 刺痛, 闷, 像什么]}
+  reask: {en: ["What does the pain feel like?", "Is it more of a pressure, a burning, or a sharp stabbing pain?"], zh: ["是什么样的疼？", "是压着疼、烧着疼，还是针扎一样的疼？"]}
+  default_disclosure: on_specific_ask
+  display:
+    en: {pressure: "like a heavy pressure or squeezing", burning: "a burning feeling", sharp: "a sharp, stabbing pain"}
+    zh: {pressure: "闷闷的，像压着一块石头", burning: "烧得慌", sharp: "针扎一样刺痛"}
+  ddxplus: {evidence: E_54, map: {V_181: burning, V_183: pressure, V_154: pressure, V_198: pressure, V_179: sharp, V_192: sharp, V_191: sharp}}
+severity:
+  type: ordinal_3
+  options: [mild, moderate, severe]
+  keywords: {en: [how bad, how severe, intense, bearable, strong, painful is it, "0 to 10", scale], zh: [厉害, 严重, 能忍, 程度, 疼得, 多疼, 几分]}
+  reask: {en: ["How bad is the pain?", "Is it something you can put up with, or is it really severe?"], zh: ["疼得厉害吗？", "是能忍的那种，还是特别严重？"]}
+  default_disclosure: on_general_ask
+  display:
+    en: {mild: "mild, I can put up with it", moderate: "quite painful, hard to ignore", severe: "really severe, unbearable"}
+    zh: {mild: "有点疼，能忍", moderate: "挺疼的，有点受不了", severe: "疼得要死，受不了"}
+  ddxplus: {evidence: E_56, map_scale: {mild: [0, 3], moderate: [4, 6], severe: [7, 10]}}
+functional_impact:
+  type: categorical
+  options: [none, limits_activity, wakes_at_night]
+  keywords: {en: [sleep, night, daily, work, activities, affect, stop you, interfere], zh: [睡觉, 晚上, 影响, 干活, 上班, 日常, 耽误]}
+  reask: {en: ["Does it affect your sleep or daily activities?", "Does the pain wake you up at night?"], zh: ["影响睡觉或者干活吗？", "晚上会疼醒吗？"]}
+  default_disclosure: on_specific_ask
+  display:
+    en: {none: "it doesn't really stop me doing anything", limits_activity: "I have to stop what I'm doing when it comes", wakes_at_night: "it wakes me up at night"}
+    zh: {none: "不影响，该干嘛干嘛", limits_activity: "疼起来就得停下来歇着", wakes_at_night: "晚上会疼醒"}
+  ddxplus: manual
+pattern:
+  type: categorical
+  options: [episodic, constant]
+  keywords: {en: [constant, all the time, come and go, comes and goes, episodes, continuous, on and off], zh: [一直, 一阵一阵, 持续, 时不时, 断断续续, 总是]}
+  reask: {en: ["Is the pain there all the time, or does it come and go?", "Is it constant or in episodes?"], zh: ["是一直疼，还是一阵一阵的？", "持续的还是发作性的？"]}
+  default_disclosure: on_specific_ask
+  display:
+    en: {episodic: "it comes and goes", constant: "it's there all the time"}
+    zh: {episodic: "一阵一阵的", constant: "一直疼"}
+  ddxplus: manual
+duration:
+  type: categorical
+  options: [hours, days, weeks, months]
+  keywords: {en: [how long, since when, started, began, when did, duration], zh: [多久, 多长时间, 什么时候开始, 几天, 开始的]}
+  reask: {en: ["How long has this been going on?", "When did it start?"], zh: ["这样多久了？", "什么时候开始的？"]}
+  default_disclosure: on_general_ask
+  display:
+    en: {hours: "just a few hours", days: "a few days", weeks: "a couple of weeks", months: "several months"}
+    zh: {hours: "就几个小时", days: "几天了", weeks: "两三个星期了", months: "好几个月了"}
+  ddxplus: manual
+onset:
+  type: categorical
+  options: [sudden, gradual]
+  keywords: {en: [suddenly, sudden, gradually, all of a sudden, slowly, come on], zh: [突然, 慢慢, 一下子, 逐渐]}
+  reask: {en: ["Did it come on suddenly or gradually?", "Was it sudden?"], zh: ["是突然来的还是慢慢来的？", "突然发作的吗？"]}
+  default_disclosure: on_specific_ask
+  display:
+    en: {sudden: "it came on all of a sudden", gradual: "it crept up gradually"}
+    zh: {sudden: "突然就来了", gradual: "慢慢来的"}
+  ddxplus: {evidence: E_59, map_scale: {gradual: [0, 5], sudden: [6, 10]}}
+trigger:
+  type: bool
+  tag_options: [postprandial, exertional, lying_down, breathing, movement, stress]
+  keywords:
+    en: {postprandial: [eating, meal, food, after you eat], exertional: [exercise, exertion, walking, stairs, effort, activity], lying_down: [lying, lie down, bed, bending], breathing: [breathe in, breathing in, inhale, deep breath, breath in], movement: [move, moving, twist, press, touch], stress: [stress, anxious, worried, nervous]}
+    zh: {postprandial: [吃饭, 饭后, 吃东西, 吃完, 饭], exertional: [活动, 走路, 爬楼, 运动, 干活, 累], lying_down: [躺, 平躺, 弯腰], breathing: [呼吸, 吸气, 深吸], movement: [动, 按, 压, 转身, 碰], stress: [紧张, 着急, 压力, 焦虑]}
+  default_disclosure: on_specific_ask
+  display:
+    en: {true: "yes, that makes it worse", false: "no, that doesn't seem to matter"}
+    zh: {true: "对，那样会更疼", false: "没有，那个没关系"}
+  tag_display:
+    en: {postprandial: "after eating", exertional: "with exertion", lying_down: "when lying down", breathing: "when breathing in deeply", movement: "when I move or press on it", stress: "when I'm stressed"}
+    zh: {postprandial: "吃完饭", exertional: "活动的时候", lying_down: "躺下的时候", breathing: "深吸气的时候", movement: "一动或者一按", stress: "紧张的时候"}
+  ddxplus: {tags: {postprandial: E_215, exertional: E_218, lying_down: E_217, breathing: E_220, movement: E_216, stress: E_16}}
+relief:
+  type: bool
+  tag_options: [rest, antacid, leaning_forward]
+  keywords:
+    en: {rest: [rest, resting, stop, sit down], antacid: [antacid, tums, omeprazole, stomach medicine], leaning_forward: [lean forward, sitting up, bending forward]}
+    zh: {rest: [休息, 歇, 停下], antacid: [胃药, 抑酸, 奥美拉唑], leaning_forward: [前倾, 坐起来, 弯腰]}
+  default_disclosure: on_specific_ask
+  display: {en: {true: "yes, that helps", false: "no, that doesn't help"}, zh: {true: "对，那样好一点", false: "没有，那样也不管用"}}
+  tag_display: {en: {rest: "resting", antacid: "taking an antacid", leaning_forward: "leaning forward"}, zh: {rest: "休息", antacid: "吃胃药", leaning_forward: "往前倾"}}
+  ddxplus: {tags: {leaning_forward: E_33, rest: E_218}}
+radiation:
+  type: categorical
+  options: [none, arm, jaw, back]
+  keywords: {en: [spread, radiate, travel, go anywhere, arm, jaw, back, shoulder], zh: [放射, 串, 传到, 扩散, 胳膊, 下巴, 后背, 肩膀]}
+  reask: {en: ["Does the pain spread anywhere, like your arm, jaw or back?", "Does it go anywhere else?"], zh: ["疼会串到别处吗，比如胳膊、下巴、后背？", "会传到别的地方吗？"]}
+  default_disclosure: on_specific_ask
+  display:
+    en: {none: "no, it stays in one place", arm: "it goes down my left arm", jaw: "it goes up into my jaw", back: "it goes through to my back"}
+    zh: {none: "不串，就那一块", arm: "会串到左胳膊", jaw: "会串到下巴", back: "会串到后背"}
+  ddxplus: {evidence: E_57, map: {V_123: none, V_194: arm, V_195: arm, V_30: arm, V_31: arm, V_121: jaw, V_33: jaw, V_39: back, V_127: back, V_128: back, V_170: back, V_171: back}}
+associated:
+  type: bool
+  tag_options: [sweating, dyspnea, nausea, palpitations, dizziness, acid_taste, cough, fever]
+  keywords:
+    en: {sweating: [sweat, sweating, sweaty], dyspnea: [short of breath, shortness of breath, breathless, difficulty breathing, out of breath], nausea: [nausea, nauseous, sick, vomit], palpitations: [palpitations, heart racing, pounding, heartbeat], dizziness: [dizzy, dizziness, lightheaded, faint], acid_taste: [acid, sour, heartburn, reflux, taste], cough: [cough, coughing], fever: [fever, temperature, chills]}
+    zh: {sweating: [出汗, 冒汗, 冷汗], dyspnea: [气短, 喘, 憋气, 呼吸], nausea: [恶心, 想吐, 吐], palpitations: [心慌, 心跳, 心悸], dizziness: [头晕, 晕, 眼前发黑], acid_taste: [反酸, 烧心, 酸水, 嗳气], cough: [咳嗽, 咳], fever: [发烧, 发热, 体温]}
+  default_disclosure: on_specific_ask
+  display: {en: {true: "yes, I've had that", false: "no, nothing like that"}, zh: {true: "有，有这个", false: "没有，没这个"}}
+  tag_display:
+    en: {sweating: "sweating", dyspnea: "shortness of breath", nausea: "nausea", palpitations: "palpitations", dizziness: "dizziness", acid_taste: "a sour taste or heartburn", cough: "a cough", fever: "fever"}
+    zh: {sweating: "出汗", dyspnea: "气短", nausea: "恶心", palpitations: "心慌", dizziness: "头晕", acid_taste: "反酸烧心", cough: "咳嗽", fever: "发烧"}
+  ddxplus: {tags: {sweating: E_50, dyspnea: E_66, nausea: E_148, palpitations: E_155, dizziness: E_82, cough: E_201, fever: E_91}}
+prior_severity:
+  type: ordinal_3
+  options: [mild, moderate, severe]
+  keywords: {en: [last time, previous visit, that time, back then, how bad was it then, when you saw], zh: [上次, 那次, 以前那回, 那时候, 上回]}
+  reask: {en: ["When you saw a doctor about this before, how bad was it then?", "Last time, was the pain mild, moderate or severe?"], zh: ["上次看医生的时候，疼得厉害吗？", "上回是轻微的、中等的，还是很严重？"]}
+  default_disclosure: on_specific_ask
+  display:
+    en: {mild: "it was mild that time", moderate: "it was quite bad that time", severe: "it was terrible that time"}
+    zh: {mild: "那次不太厉害", moderate: "那次挺厉害的", severe: "那次疼得要死"}
+  ddxplus: manual
+prior_test:
+  type: text
+  keywords: {en: [last time, previous, before, test, ecg, ekg, scan, result, endoscopy, checked], zh: [上次, 以前, 之前, 检查, 心电图, 结果, 胃镜, 查过]}
+  reask: {en: ["Have you had any tests done before? What did they show?", "What did the last check-up say?"], zh: ["以前做过什么检查吗？结果怎么样？", "上次检查怎么说的？"]}
+  default_disclosure: on_specific_ask
+  ddxplus: manual
+family_history:
+  type: bool
+  tag_options: [cad, sudden_death, reflux]
+  keywords: {en: {cad: [family, father, mother, parents, heart disease, heart attack, relatives], sudden_death: [sudden death, died suddenly], reflux: [family, reflux]}, zh: {cad: [家里, 家族, 父母, 爸, 妈, 心脏病, 心梗, 亲戚], sudden_death: [猝死], reflux: [家里, 胃病]}}
+  default_disclosure: on_specific_ask
+  display: {en: {true: "yes", false: "no, not that I know of"}, zh: {true: "有", false: "没有，据我所知没有"}}
+  tag_display: {en: {cad: "heart disease in the family", sudden_death: "sudden death in the family", reflux: "stomach trouble in the family"}, zh: {cad: "家里有人心脏病", sudden_death: "家里有人猝死", reflux: "家里有人胃病"}}
+  ddxplus: manual
+lifestyle:
+  type: categorical
+  tag_options: [smoking, alcohol]
+  tag_values: {smoking: [none, occasional, 10_per_day, 20_per_day], alcohol: [none, occasional, daily]}
+  keywords: {en: {smoking: [smoke, smoking, cigarettes, tobacco], alcohol: [drink, alcohol, beer, wine, liquor]}, zh: {smoking: [抽烟, 吸烟, 烟], alcohol: [喝酒, 酒, 饮酒]}}
+  default_disclosure: on_specific_ask
+  display:
+    en: {none: "no, never", occasional: "only now and then", 10_per_day: "about half a pack a day", 20_per_day: "a pack a day", daily: "every day"}
+    zh: {none: "不，从来不", occasional: "偶尔", 10_per_day: "一天半包", 20_per_day: "一天一包", daily: "天天喝"}
+  downplay:
+    en: {10_per_day: "a few now and then", 20_per_day: "maybe half a pack", daily: "a couple of drinks sometimes"}
+    zh: {10_per_day: "偶尔抽几根", 20_per_day: "也就半包", daily: "偶尔喝点"}
+  ddxplus: {tags: {smoking: E_79, alcohol: E_78}}
+medical_history:
+  type: bool
+  tag_options: [hypertension, diabetes, reflux, anxiety, cad, hyperlipidemia]
+  keywords: {en: {hypertension: [blood pressure, hypertension], diabetes: [diabetes, sugar], reflux: [reflux, heartburn, ulcer, stomach problem, stomach trouble, indigestion], anxiety: [anxiety, depression, panic, mental], cad: [heart attack, angina, heart problem, stent], hyperlipidemia: [cholesterol]}, zh: {hypertension: [高血压, 血压], diabetes: [糖尿病, 血糖], reflux: [胃病, 反流, 胃溃疡], anxiety: [焦虑, 抑郁, 惊恐], cad: [心脏病, 心梗, 支架, 心绞痛], hyperlipidemia: [血脂, 胆固醇]}}
+  default_disclosure: on_specific_ask
+  display: {en: {true: "yes, I have that", false: "no"}, zh: {true: "有", false: "没有"}}
+  tag_display: {en: {hypertension: "high blood pressure", diabetes: "diabetes", reflux: "stomach reflux", anxiety: "anxiety", cad: "a heart problem", hyperlipidemia: "high cholesterol"}, zh: {hypertension: "高血压", diabetes: "糖尿病", reflux: "胃反流", anxiety: "焦虑", cad: "心脏病", hyperlipidemia: "高血脂"}}
+  ddxplus: {tags: {cad: E_105, hypertension: E_104, diabetes: E_69, hyperlipidemia: E_71, reflux: E_125, anxiety: E_81}}
+medication:
+  type: categorical
+  options: [none, antacid, antihypertensive, aspirin, anxiolytic, painkiller]
+  keywords: {en: [medication, medicine, pills, tablets, taking anything, drugs, prescription], zh: [吃药, 药, 吃什么药, 用药, 在吃]}
+  reask: {en: ["Are you taking any medication?", "Any pills or tablets at the moment?"], zh: ["现在在吃什么药吗？", "平时有用药吗？"]}
+  default_disclosure: on_specific_ask
+  display:
+    en: {none: "no, nothing", antacid: "just some antacid for my stomach", antihypertensive: "my blood pressure pills", aspirin: "a daily aspirin", anxiolytic: "something for my nerves", painkiller: "some painkillers"}
+    zh: {none: "没吃什么药", antacid: "就吃点胃药", antihypertensive: "降压药", aspirin: "阿司匹林", anxiolytic: "安神的药", painkiller: "止疼药"}
+  ddxplus: manual

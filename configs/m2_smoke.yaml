@@ -1,0 +1,14 @@
+run_id: m2_smoke
+cluster: chest_pain
+cases: [cp_001]
+channels:
+  - {name: cooperative,   specs: []}
+  - {name: exaggerate_k2, specs: [{kind: exaggerate, params: {k: 2, flooding_rate: 0.3}}]}
+persona: {h: 2, e: 2, x: 2, a: 2, c: 2, o: 2, cefr: B}
+seeds: [0]
+doctor: {type: scripted_fixed, questions: ["Where exactly is the pain?", "How bad is it? Does it keep you up at night?", "Any sweating or shortness of breath with it?", "DIAGNOSIS READY: pending"]}
+max_turns: 4
+components: llm
+models: {conversational: qwen3.7-plus, meta: qwen3.7-max, checker: regex}
+role: template
+lang: en
