@@ -1,0 +1,12 @@
+# VeRL 正式训练的配置模板（A100 上按 VeRL 版本填实；本期不运行）
+interaction:
+  class: scc.doctor.rl.verl_adapter.DoctorInteraction
+  kwargs: {cluster: chest_pain, lang: en, max_turns: 12}
+data:
+  train: {cases: [cp_001, cp_002, cp_003, cp_004, cp_005, cp_006, cp_007, cp_008], channels: [cooperative, exaggerate_k2, vague_p08, self_dx]}
+  test:  {cases: [cp_009, cp_010, cp_011], channels: [cooperative, exaggerate_k1, exaggerate_k2, vague_p08, self_dx]}
+policy_model: Qwen/Qwen3-8B
+algorithm: grpo
+rollout: {n: 8, max_turns: 12, max_new_tokens: 256}
+reward: {lam_format: 0.5, cost_per_turn: 0.02, bonus_correct: 1.0}
+train: {lr: 1e-6, kl_beta: 0.02, steps: 1000}

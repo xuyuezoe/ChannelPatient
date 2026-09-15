@@ -26,10 +26,28 @@ def git_commit() -> str:
         return "n/a"
 
 
-def make_doctor(spec: dict | str, cfg, lang: str):
+def make_doctor(spec: dict | str, cfg, lang: str, channel_name: str = "", clients: dict | None = None):
+    """按配置构造医生。channel_name 只给 Told 基线注入病历备注；clients 里可传共享的 LLM 客户端。"""
     if isinstance(spec, str):
         spec = {"type": spec}
     t = spec.get("type", "scripted_fixed")
+    clients = clients if clients is not None else {}
+    if t == "api":
+        from scc.doctor.api_doctor import ApiDoctor, FakeClient, scripted_doctor_texts
+        if spec.get("client", "llm") == "fake":
+            client = FakeClient(scripted_doctor_texts(list(cfg.ddx_set), lang))
+        else:
+            from scc.llm import ChatClient
+            client = clients.get("doctor") or ChatClient(spec.get("model", settings.default_models["conversational"]), thinking=spec.get("thinking", "off"), temperature=float(spec.get("temperature", 0.0)))
+            clients["doctor"] = client
+        return ApiDoctor(client, spec.get("baseline", "vanilla"), lang, told_channel=channel_name, max_tokens=int(spec.get("max_tokens", 400)),
+                         temperature=float(spec.get("temperature", 0.0)), name=spec.get("name") or f"api_{spec.get('baseline', 'vanilla')}")
+    if t == "agent":
+        from scc.doctor.agent.agent_doctor import build_agent_doctor
+        return build_agent_doctor(spec, cfg, lang, clients)
+    if t == "rl":
+        from scc.doctor.rl.policy_doctor import build_rl_doctor
+        return build_rl_doctor(spec, cfg, lang, clients)
     if t == "scripted_fixed":
         qs = spec.get("questions")
         if isinstance(qs, str) and qs.startswith("default"):
@@ -126,6 +144,11 @@ def main():
 
     if args.dry_run:
         from scc.env.channels import build_report_table
+        d0 = make_doctor(doctor_spec, cfg, lang, channel_name=jobs[0][1].name if jobs else "", clients={})
+        dspec = doctor_spec if isinstance(doctor_spec, dict) else {"type": doctor_spec}
+        doc_calls = 1 if (dspec.get("type") in ("api", "agent") and dspec.get("client", "llm") != "fake" and dspec.get("components", "llm") != "stub") else 0
+        per_turn = {"stub": 0, "llm": 2}[comp_kind] + doc_calls * (1 if dspec.get("type") == "api" else 3)
+        print(f"[dry-run] doctor={d0.name}; estimated API calls <= {len(jobs)} episodes x {max_turns} turns x {per_turn}/turn = {len(jobs) * max_turns * per_turn}")
         for case, pc in jobs[:8]:
             t, sd, _ = build_report_table(case, pc, cfg)
             print(f"\n== {case.case_id} | {pc.label()} | seed={pc.seed} | self_dx={sd}")
@@ -134,6 +157,7 @@ def main():
                     print(f"   {aid:16s} {str(e.true_value)[:30]:30s} -> {str(e.report_value)[:30]:30s} [{e.rule}] disc={e.disclosure}")
         return
 
+    shared_clients: dict = {}
     manifest = {"run_id": run_id, "config": cfgd, "cli": vars(args), "git": git_commit(), "started": time.strftime("%Y-%m-%dT%H:%M:%S"),
                 "n_episodes": len(jobs), "components": comp_kind, "models": models if comp_kind == "llm" else {}, "failed": []}
     failed_path = out_dir / "failed.jsonl"
@@ -141,7 +165,7 @@ def main():
     def one(job):
         case, pc = job
         comp = stub_components(cfg, pc.seed) if comp_kind == "stub" else llm_components(cfg, conv_client, meta_client, models.get("checker", "regex"), cfgd.get("role", "template"))
-        doctor = make_doctor(doctor_spec, cfg, lang)
+        doctor = make_doctor(doctor_spec, cfg, lang, channel_name=pc.name, clients=shared_clients)
         eid = f"{case.case_id}|{pc.name}|{pc.persona.code()}|seed={pc.seed}|doctor={doctor.name}"
         fname = out_dir / (eid.replace("|", "__").replace("=", "-") + ".jsonl")
         oracle = Oracle(case, cfg, L, u_library={k: [ChannelSpec.from_dict(s) for s in v] for k, v in oracle_cfg["u_library"].items()} if isinstance(oracle_cfg.get("u_library"), dict) else None,
@@ -165,8 +189,12 @@ def main():
     manifest["finished"] = time.strftime("%Y-%m-%dT%H:%M:%S"); manifest["elapsed_s"] = round(time.time() - t0, 1)
     if conv_client:
         manifest["llm"] = {"conversational": conv_client.stats(), "meta": meta_client.stats()}
+    for k, c in shared_clients.items():
+        if hasattr(c, "stats"):
+            manifest.setdefault("llm", {})[k] = c.stats()
+    manifest["api_calls_total"] = sum(v.get("calls", 0) for v in manifest.get("llm", {}).values() if v.get("model") != "fake")
     json.dump(manifest, open(out_dir / "manifest.json", "w"), indent=2, ensure_ascii=False)
-    print(f"[run {run_id}] done in {manifest['elapsed_s']}s, failed={len(manifest['failed'])}, out={out_dir}")
+    print(f"[run {run_id}] done in {manifest['elapsed_s']}s, failed={len(manifest['failed'])}, api_calls={manifest['api_calls_total']}, out={out_dir}")
 
 
 if __name__ == "__main__":

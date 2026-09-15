@@ -13,6 +13,8 @@ class ChatClient:
                  cache_dir: str | Path | None = None, temperature: float = 0.0, timeout: float = 120.0, max_retries: int = 6, use_cache: bool = True):
         import httpx
         from openai import OpenAI
+        # YAML 会把裸的 off/on 解析成布尔值，这里统一成字符串
+        thinking = "off" if thinking in (False, "off", None) else "on"
         self.model, self.thinking, self.temperature, self.max_retries = model, thinking, temperature, max_retries
         self.base_url = base_url or settings.base_url; self.api_key = api_key or settings.api_key
         self.cache_dir = Path(cache_dir) if cache_dir else settings.cache_dir

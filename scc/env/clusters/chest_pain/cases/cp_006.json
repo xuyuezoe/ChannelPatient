@@ -7,7 +7,7 @@
     "condition": "Stable angina",
     "reviewed_by": "pending",
     "reviewed_on": null,
-    "notes": "atoms from DDXPlus evidences where mapped; other slots from per-dx template"
+    "notes": "atoms from DDXPlus evidences where mapped; other slots from per-dx template; 4 bool tag atoms filled as false for menu coverage (2026-09-15)"
   },
   "demographics": {
     "age": 46,
@@ -233,6 +233,16 @@
       ]
     },
     {
+      "id": "rel_leaning_forward",
+      "slot": "relief",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "leaning_forward"
+      ]
+    },
+    {
       "id": "cp_radiation",
       "slot": "radiation",
       "type": "categorical",
@@ -380,6 +390,28 @@
       ]
     },
     {
+      "id": "fam_sudden_death",
+      "slot": "family_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "sudden_death"
+      ],
+      "verifiable_by": "family"
+    },
+    {
+      "id": "fam_reflux",
+      "slot": "family_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "reflux"
+      ],
+      "verifiable_by": "family"
+    },
+    {
       "id": "life_smoking",
       "slot": "lifestyle",
       "type": "categorical",
@@ -470,6 +502,16 @@
       "verifiable_by": null,
       "tags": [
         "cad"
+      ]
+    },
+    {
+      "id": "hx_anxiety",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "anxiety"
       ]
     },
     {

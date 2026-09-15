@@ -6,7 +6,7 @@
     "id": null,
     "reviewed_by": "pending",
     "reviewed_on": null,
-    "notes": "typical GERD: epigastric burning, postprandial, worse lying down, antacid helps; prior ECG borderline (anchor)"
+    "notes": "typical GERD: epigastric burning, postprandial, worse lying down, antacid helps; prior ECG borderline (anchor); 10 bool tag atoms filled as false for menu coverage (2026-09-15)"
   },
   "demographics": {
     "age": 54,
@@ -169,6 +169,16 @@
       ]
     },
     {
+      "id": "trig_stress",
+      "slot": "trigger",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "stress"
+      ]
+    },
+    {
       "id": "rel_antacid",
       "slot": "relief",
       "type": "bool",
@@ -186,6 +196,16 @@
       "disclosure": "on_specific_ask",
       "tags": [
         "rest"
+      ]
+    },
+    {
+      "id": "rel_leaning_forward",
+      "slot": "relief",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "leaning_forward"
       ]
     },
     {
@@ -252,6 +272,36 @@
       ]
     },
     {
+      "id": "assoc_dizziness",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "dizziness"
+      ]
+    },
+    {
+      "id": "assoc_cough",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "cough"
+      ]
+    },
+    {
+      "id": "assoc_fever",
+      "slot": "associated",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "fever"
+      ]
+    },
+    {
       "id": "prior_severity",
       "slot": "prior_severity",
       "type": "ordinal_3",
@@ -282,6 +332,28 @@
       "tags": [
         "cad"
       ]
+    },
+    {
+      "id": "fam_sudden_death",
+      "slot": "family_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "sudden_death"
+      ],
+      "verifiable_by": "family"
+    },
+    {
+      "id": "fam_reflux",
+      "slot": "family_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "reflux"
+      ],
+      "verifiable_by": "family"
     },
     {
       "id": "life_smoking",
@@ -342,6 +414,36 @@
       "disclosure": "on_specific_ask",
       "tags": [
         "cad"
+      ]
+    },
+    {
+      "id": "hx_diabetes",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "diabetes"
+      ]
+    },
+    {
+      "id": "hx_anxiety",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "anxiety"
+      ]
+    },
+    {
+      "id": "hx_hyperlipidemia",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "hyperlipidemia"
       ]
     },
     {

@@ -86,8 +86,8 @@ class Oracle:
             if rule.startswith("verified"):
                 self._observe_true(atom, d["true_value"])
                 continue
-            if any(r == d["report_value"] and f == form for r, f in self.reports[atom.id]):
-                continue                           # consistency lock: repeat carries no information
+            if any(r == d["report_value"] for r, f in self.reports[atom.id]):
+                continue                           # consistency lock: the same report value again carries no information (whatever the phrasing)
             n = self.n_asked[atom.id] or int(d.get("n_asked", 1))
             self.reports[atom.id].append((d["report_value"], form))
             self._add(lambda z, u, a=atom, r=d["report_value"], fm=form: self._lik_report(z, u, a, r, fm))

@@ -1,0 +1,14 @@
+run_id: d_m3_agent_nola
+cluster: chest_pain
+cases: all
+channels:
+  - {name: cooperative,   specs: []}
+  - {name: exaggerate_k2, specs: [{kind: exaggerate, params: {k: 2, flooding_rate: 0.3}}]}
+  - {name: vague_p08,     specs: [{kind: vague, params: {p: 0.8}}]}
+  - {name: self_dx,       specs: [{kind: self_dx, params: {conviction: insist}}]}
+persona: {h: 2, e: 2, x: 2, a: 2, c: 2, o: 2, cefr: B}
+seeds: [0, 1]
+doctor: {type: agent, components: stub, lookahead: false, name: agent_nolookahead}
+max_turns: 14
+components: stub
+lang: en

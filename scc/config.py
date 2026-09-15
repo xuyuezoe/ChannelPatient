@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-ENV_FILE = ROOT / ".env" if (ROOT / ".env").exists() else ROOT / "pilot" / ".env"
+ENV_FILE = ROOT / "pilot" / ".env"
 PROXY_VARS = ["http_proxy", "https_proxy", "all_proxy", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY"]
 
 

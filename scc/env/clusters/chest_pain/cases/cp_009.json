@@ -7,7 +7,7 @@
     "condition": "Pericarditis",
     "reviewed_by": "pending",
     "reviewed_on": null,
-    "notes": "atoms from DDXPlus evidences where mapped; other slots from per-dx template"
+    "notes": "atoms from DDXPlus evidences where mapped; other slots from per-dx template; 5 bool tag atoms filled as false for menu coverage (2026-09-15)"
   },
   "demographics": {
     "age": 37,
@@ -392,6 +392,28 @@
       ]
     },
     {
+      "id": "fam_sudden_death",
+      "slot": "family_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "sudden_death"
+      ],
+      "verifiable_by": "family"
+    },
+    {
+      "id": "fam_reflux",
+      "slot": "family_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "reflux"
+      ],
+      "verifiable_by": "family"
+    },
+    {
       "id": "life_smoking",
       "slot": "lifestyle",
       "type": "categorical",
@@ -458,6 +480,36 @@
       "verifiable_by": null,
       "tags": [
         "anxiety"
+      ]
+    },
+    {
+      "id": "hx_diabetes",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "diabetes"
+      ]
+    },
+    {
+      "id": "hx_cad",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "cad"
+      ]
+    },
+    {
+      "id": "hx_hyperlipidemia",
+      "slot": "medical_history",
+      "type": "bool",
+      "true_value": false,
+      "disclosure": "on_specific_ask",
+      "tags": [
+        "hyperlipidemia"
       ]
     },
     {

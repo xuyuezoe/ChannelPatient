@@ -1,0 +1,23 @@
+run_id: d_m5_rl_dry
+cluster: chest_pain
+cases: [cp_001, cp_002, cp_003]
+channels:
+  - {name: cooperative,   specs: []}
+  - {name: exaggerate_k2, specs: [{kind: exaggerate, params: {k: 2, flooding_rate: 0.3}}]}
+  - {name: vague_p08,     specs: [{kind: vague, params: {p: 0.8}}]}
+  - {name: self_dx,       specs: [{kind: self_dx, params: {conviction: insist}}]}
+persona: {h: 2, e: 2, x: 2, a: 2, c: 2, o: 2, cefr: B}
+policy_model: Qwen/Qwen2.5-0.5B-Instruct
+lora: false
+lr: 1.0e-6
+kl_beta: 0.02
+batch_episodes: 2
+group_size: 4
+steps: 20
+max_turns: 6
+max_new_tokens: 96
+max_prompt_tokens: 1536
+temperature: 1.0
+seed: 0
+reward: {lam_format: 0.5, cost_per_turn: 0.02, bonus_correct: 1.0}
+lang: en

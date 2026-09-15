@@ -6,7 +6,7 @@ the same channel rules that distort reports are used by the oracle to compute th
 ## Install
 ```
 pip install -r requirements.txt          # openai httpx pydantic pyyaml numpy pandas matplotlib pytest scikit-learn
-cp .env.example .env                     # OpenAI-compatible base URL + key (only needed for --components llm)
+cp pilot/.env.example pilot/.env         # relay URL + key (only needed for --components llm)
 pytest tests -q                          # 119 tests, no API calls
 ```
 
@@ -21,6 +21,18 @@ python run_episode.py --config configs/m1_stub.yaml --cases cp_001 --channels "e
 ```
 python run_episode.py --config configs/m2_smoke.yaml              # ~20 calls
 ```
+
+## Doctors (the other side of the environment)
+```
+python run_episode.py --config configs/d_m1_stub.yaml        # tested doctor with a fake LLM (replayed script), 0 API
+python run_episode.py --config configs/d_m2_smoke.yaml       # tested doctor = qwen3.7-plus, Vanilla baseline
+python run_episode.py --config configs/d_m3_agent.yaml       # scaffold agent, stub components (regex perceiver, menu candidates, table likelihood)
+python run_episode.py --config configs/d_m4_agent_smoke.yaml # scaffold agent, LLM perceiver / candidates / LLM-estimated medical table
+python -m scc.analysis.compare results/episodes/d_m3_agent results/episodes/d_m3_agent_zonly   # comparison table
+python -m scc.doctor.rl.train_min --config configs/d_m5_rl_dry.yaml   # minimal GRPO dry run (0.5B policy, stub patient, 0 API)
+```
+Doctor types in a config: `{type: api, baseline: vanilla|cot|uncertainty|told}`, `{type: agent, components: stub|llm, likelihood: table|llm, z_only, lookahead, anchoring, stopping, monitor}`, scripted doctors, or `type: "module:Class"`.
+Ablations of the agent are configuration switches; `z_only: true` is the key one (no channel hypotheses).
 
 ## Layout
 ```

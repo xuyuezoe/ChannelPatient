@@ -1,0 +1,13 @@
+run_id: d_m2_smoke
+cluster: chest_pain
+cases: [cp_001]
+channels:
+  - {name: cooperative,   specs: []}
+  - {name: exaggerate_k2, specs: [{kind: exaggerate, params: {k: 2, flooding_rate: 0.3}}]}
+persona: {h: 2, e: 2, x: 2, a: 2, c: 2, o: 2, cefr: B}
+seeds: [0]
+doctor: {type: api, baseline: vanilla, model: qwen3.7-plus, thinking: 'off', temperature: 0.0}
+max_turns: 6
+components: llm
+models: {conversational: qwen3.7-plus, meta: qwen3.7-max, checker: regex}
+lang: en
